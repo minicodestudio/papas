@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "875322918052",
+    "project_id": "papas-7cf78",
+    "storage_bucket": "papas-7cf78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875322918052:android:9496b4d636088796441231",
+        "android_client_info": {
+          "package_name": "com.mcs.papas.papas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875322918052-l0mn91p76mjep5as9p6dnfqlnmmqmi0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHswV3nVKA5EQd5xx396aodKPCYqXnvC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875322918052-l0mn91p76mjep5as9p6dnfqlnmmqmi0m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "875322918052-5vbaviia0u1se95ssnkmjj01j033jm7c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mcs.papas.papas"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
