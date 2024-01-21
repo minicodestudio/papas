@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -72,6 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (user != null) {
                       // Google 로그인 성공, 원하는 동작 수행
                       print("Google 로그인 성공: ${user.displayName}");
+                      // TODO : 사용자 정보 저장
+                      context.go('/home');
+
                     } else {
                       // Google 로그인 실패
                       print("Google 로그인 실패");

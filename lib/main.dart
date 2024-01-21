@@ -40,6 +40,12 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: "NotoSansKR",
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            titleTextStyle: TextStyle(color: Colors.black),
+            iconTheme: IconThemeData(color: Colors.black),
+            elevation: 0,
+          ),
           textButtonTheme: TextButtonThemeData(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF6C5C39)),
