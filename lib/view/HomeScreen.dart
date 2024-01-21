@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:papas/model/DiaryModel.dart';
+import 'package:provider/provider.dart';
 
 import '../common/Utils.dart';
+import '../datasource/DiaryDatasource.dart';
+import '../viewModel/HomeViewModel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,10 +17,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> diaryList = [];
 
   @override
   Widget build(BuildContext context) {
+    // HomeViewModel을 Provider로부터 가져오기
+    final HomeViewModel viewModel = Provider.of<HomeViewModel>(context);
+
+    void _handlePopupMenuSelection(BuildContext context, String value, Diary diary) {
+      if (value == 'edit') {
+        print('edit');
+        // Edit logic
+        //_editDiary(context, diary);
+      } else if (value == 'delete') {
+        print('delete');
+        // Delete logic
+        //_deleteDiary(context, diary);
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -49,19 +69,84 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: diaryList.length > 0? DiaryContent(diaryList: diaryList) :
-        Center(
-          child: Text('우측 하단의 + 버튼으로\n새로운 다이어리를 작성하세요!',
-          style: TextStyle(
-            color: Color(0xFF5B5B5B),
-            fontSize: 18.0,
-            fontWeight: FontWeight.w400,
-          ),
-          textAlign: TextAlign.center,),
+        body: FutureBuilder(
+          future: viewModel.fetchDiaryList('minicodestudio@gmail.com'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return viewModel.diaryList.isNotEmpty
+                  ? Center(
+                child: ListView.builder(
+                  itemCount: viewModel.diaryList.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: Color(0xFFFFF3DA),
+                      margin: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(Icons.subject),
+                            title: Text(formatDateString(viewModel.diaryList[index].date), style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),),
+                            subtitle: Text(viewModel.diaryList[index].content, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              PopupMenuButton<String>(
+                                onSelected: (value) {
+                                  _handlePopupMenuSelection(context, value, viewModel.diaryList[index]);
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 'edit',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.edit),
+                                        const SizedBox(width: 8),
+                                        Text('Edit'),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.delete),
+                                        const SizedBox(width: 8),
+                                        Text('Delete'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+                  : Center(
+                child: Text(
+                  '우측 하단의 + 버튼으로\n새로운 다이어리를 작성하세요!',
+                  style: TextStyle(
+                    color: Color(0xFF5B5B5B),
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+          },
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showBottomSheet(context);
+            _showBottomSheet(context, viewModel);
           },
           child: Icon(Icons.add),
         ),
@@ -69,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context, HomeViewModel viewModel) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // 화면 높이에 맞게 스크롤 가능하게 설정
@@ -94,9 +179,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {
-                      // 완료 버튼 눌렸을 때의 로직 추가
+                    onPressed: () async {
                       print('완료...');
+                      String content = textEditingController.text;
+                      if (content.trim() == "") {
+                        Fluttertoast.showToast(msg: "내용을 입력해주세요.", gravity: ToastGravity.BOTTOM);
+                        return;
+                      }
+                      await _saveDiary(context, viewModel, textEditingController.text);
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -132,27 +222,25 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-}
 
-class DiaryContent extends StatelessWidget {
-  final List<String> diaryList;
+  Future<void> _saveDiary(BuildContext context, HomeViewModel viewModel, String content) async {
 
-  const DiaryContent({Key? key, required this.diaryList}) : super(key: key);
+    DateTime currentDate = DateTime.now();
+    String formattedDate = DateFormat('yyyyMMdd').format(currentDate);
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ListView.builder(
-        itemCount: diaryList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(diaryList[index]),
-            ),
-          );
-        },
-      ),
-    );
+    Diary diary = Diary(content: content, date: formattedDate, user: 'minicodestudio@gmail.com');
+
+    try {
+      await viewModel.addDiary(diary);
+      viewModel.fetchDiaryList('minicodestudio@gmail.com');
+
+    } catch (e) {
+      print("Error saving diary: $e");
+      // 실패할 경우에 대한 로직 추가
+    }
+
+    // 변경된 데이터를 반영
+    //viewModel.notifyListeners();
   }
 }
+

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papas/firebase_options.dart';
 import 'package:papas/common/Routes.dart';
+import 'package:papas/viewModel/HomeViewModel.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
 import 'package:provider/provider.dart';
+
+import 'datasource/DiaryDatasource.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +30,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserViewModel>.value(
           value: userStatus,
+        ),
+        ChangeNotifierProvider<HomeViewModel>( // HomeViewModel 추가
+          create: (context) => HomeViewModel(DiaryDataSource()),
         ),
       ],
       child: MaterialApp.router(
