@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papas/firebase_options.dart';
-import 'package:papas/common/routes.dart';
+import 'package:papas/common/Routes.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -34,8 +34,15 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: "NotoSansKR",
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-          useMaterial3: true,
+          textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF6C5C39)),
+            ),
+          ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFFF6E1B8),
+            foregroundColor: Colors.black,
+          ),
         ),
       ),
     );

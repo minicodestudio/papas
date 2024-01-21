@@ -23,6 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -33,13 +38,15 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void checkUserLoginStatus() {
-    UserViewModel userStatus = Provider.of<UserViewModel>(context, listen: false);
-    print(userStatus.user);
-    if (userStatus.user != null) {
-      context.go('/home');
-    } else {
-      context.go('/login');
+  void checkUserLoginStatus() async {
+    if (mounted) {
+      UserViewModel userStatus = await Provider.of<UserViewModel>(
+          context, listen: false);
+      if (userStatus.user != null) {
+        context.go('/home');
+      } else {
+        context.go('/login');
+      }
     }
   }
 }

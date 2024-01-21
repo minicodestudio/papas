@@ -43,51 +43,63 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('파파스\n다이어리', style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700,),),
-              SizedBox(height: 16.0,),
-              Text('로그인하고 아이에게\n소중한 이야기를 남겨주세요!', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400,),),
-              SizedBox(height: 32.0,),
-              Divider(thickness: 1, color: Colors.grey[600],),
-              SizedBox(height: 32.0,),
-              GestureDetector(
-                onTap: () async {
-                  User? user = await _handleGoogleSignIn();
-                  if (user != null) {
-                    // Google 로그인 성공, 원하는 동작 수행
-                    print("Google 로그인 성공: ${user.displayName}");
-                  } else {
-                    // Google 로그인 실패
-                    print("Google 로그인 실패");
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2.0),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1,
-                    )
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFFFFFFF),
+                Color(0xFFF6E1B8),
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('파파스\n다이어리', style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w700,),),
+                SizedBox(height: 16.0,),
+                Text('사랑하는 아이에게\n소중한 이야기를 남겨주세요!', style: TextStyle(color: Color(0xFF5B5B5B), fontSize: 24.0, fontWeight: FontWeight.w500,),),
+                SizedBox(height: 32.0,),
+                Divider(thickness: 1, color: Colors.grey[600],),
+                SizedBox(height: 32.0,),
+                GestureDetector(
+                  onTap: () async {
+                    User? user = await _handleGoogleSignIn();
+                    if (user != null) {
+                      // Google 로그인 성공, 원하는 동작 수행
+                      print("Google 로그인 성공: ${user.displayName}");
+                    } else {
+                      // Google 로그인 실패
+                      print("Google 로그인 실패");
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1,
+                      )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/google.png', width: 28.0,),
+                        SizedBox(width: 8.0,),
+                        Text('Google 계정으로 시작하기', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400,),),
+                      ],
+                    ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/google.png', width: 28.0,),
-                      SizedBox(width: 8.0,),
-                      Text('Google 계정으로 시작하기', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400,),),
-                    ],
-                  ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

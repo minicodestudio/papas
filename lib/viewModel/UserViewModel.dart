@@ -12,7 +12,7 @@ class UserViewModel extends ChangeNotifier {
 
   void initStatus() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-      print('user : $user');
+      //print('user : $user');
       _user = user;
       notifyListeners();
     });
