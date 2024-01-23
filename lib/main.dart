@@ -8,11 +8,13 @@ import 'package:papas/viewModel/HomeViewModel.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
+import 'common/SharedPreferencesService.dart';
 import 'datasource/DiaryDatasource.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
+  await SharedPreferencesService().init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

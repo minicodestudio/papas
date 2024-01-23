@@ -26,7 +26,7 @@ class GoRouterClass {
         GoRoute(
           path: '/home',
           builder: (context, state) {
-            return const HomeScreen();
+            return HomeScreen(email: state.extra as String);
           },
         ),
         GoRoute(

@@ -5,19 +5,26 @@ import 'package:intl/intl.dart';
 import 'package:papas/model/DiaryModel.dart';
 import 'package:provider/provider.dart';
 
+import '../common/SharedPreferencesService.dart';
 import '../common/Utils.dart';
 import '../datasource/DiaryDatasource.dart';
 import '../viewModel/HomeViewModel.dart';
 import 'CalendarPopup.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  String email;
+  HomeScreen({super.key, required this.email});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: FutureBuilder(
-          future: viewModel.fetchDiaryList('minicodestudio@gmail.com'),
+          future: viewModel.fetchDiaryList(widget.email),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -232,11 +239,11 @@ class _HomeScreenState extends State<HomeScreen> {
     DateTime currentDate = DateTime.now();
     String formattedDate = DateFormat('yyyyMMdd').format(currentDate);
 
-    Diary diary = Diary(content: content, date: formattedDate, user: 'minicodestudio@gmail.com');
+    Diary diary = Diary(content: content, date: formattedDate, user: widget.email);
 
     try {
       await viewModel.addDiary(diary);
-      viewModel.fetchDiaryList('minicodestudio@gmail.com');
+      viewModel.fetchDiaryList(widget.email);
 
     } catch (e) {
       print("Error saving diary: $e");

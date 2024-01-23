@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../common/SharedPreferencesService.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -13,6 +15,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  String? displayName;
+  String? email;
+  String? photoUrl;
 
   Future<User?> _handleGoogleSignIn() async {
     try {
@@ -29,8 +35,18 @@ class _LoginScreenState extends State<LoginScreen> {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential authResult =
-      await _auth.signInWithCredential(credential);
+      final UserCredential authResult = await _auth.signInWithCredential(credential);
+      if (authResult != null) {
+        User? user = await authResult.user;
+        displayName = user?.displayName;
+        email = user?.email;
+        photoUrl = user?.photoURL;
+
+        SharedPreferencesService().setStringValue('displayName', displayName.toString());
+        SharedPreferencesService().setStringValue('email', email.toString());
+        SharedPreferencesService().setStringValue('photoUrl', photoUrl.toString());
+      }
+
       final User? user = authResult.user;
 
       return user;
@@ -73,9 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (user != null) {
                       // Google 로그인 성공, 원하는 동작 수행
                       print("Google 로그인 성공: ${user.displayName}");
-                      // TODO : 사용자 정보 저장
-                      context.go('/home');
-
+                      context.go('/home', extra: user.email);
                     } else {
                       // Google 로그인 실패
                       print("Google 로그인 실패");

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../common/SharedPreferencesService.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,9 +16,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+  late String email;
+
   @override
   void initState() {
     super.initState();
+    email = SharedPreferencesService().getStringValue('email');
     Timer(Duration(seconds: 3), () {
       checkUserLoginStatus();
     });
@@ -43,7 +48,9 @@ class _SplashScreenState extends State<SplashScreen> {
       UserViewModel userStatus = await Provider.of<UserViewModel>(
           context, listen: false);
       if (userStatus.user != null) {
-        context.go('/home');
+        print(email);
+        context.go('/home', extra: email);
+        //context.go('/login');
       } else {
         context.go('/login');
       }
