@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../common/Utils.dart';
 import '../datasource/DiaryDatasource.dart';
 import '../viewModel/HomeViewModel.dart';
+import 'CalendarPopup.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: () {
                 print('calendar_month clicked...');
+                _showCalendarPopup(context, viewModel.diaryList);
+                //context.push('/calendar', extra: viewModel.diaryList);
               },
               child: Container(
                 margin: EdgeInsets.only(right: 16.0),
@@ -242,6 +245,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // 변경된 데이터를 반영
     //viewModel.notifyListeners();
+  }
+
+  void _showCalendarPopup(BuildContext context, List<Diary> diaryList) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return CalendarPopup(diaryList: diaryList);
+        },
+    );
   }
 }
 

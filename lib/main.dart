@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:papas/firebase_options.dart';
 import 'package:papas/common/Routes.dart';
 import 'package:papas/viewModel/HomeViewModel.dart';
@@ -11,6 +12,7 @@ import 'datasource/DiaryDatasource.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -40,6 +42,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: "NotoSansKR",
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: AppBarTheme(
             color: Colors.white,
             titleTextStyle: TextStyle(color: Colors.black),

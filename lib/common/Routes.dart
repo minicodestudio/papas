@@ -4,6 +4,8 @@ import 'package:papas/view/HomeScreen.dart';
 import 'package:papas/view/LoginScreen.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
 
+import '../model/DiaryModel.dart';
+import '../view/CalendarPopup.dart';
 import '../view/SettingScreen.dart';
 import '../view/SplashScreen.dart';
 
@@ -13,7 +15,7 @@ class GoRouterClass {
 
   GoRouterClass(this.userStatus) {
     router = GoRouter(
-      initialLocation: "/home",
+      initialLocation: "/splash",
       routes: <RouteBase>[
         GoRoute(
           path: '/splash',
