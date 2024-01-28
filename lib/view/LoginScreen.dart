@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 16.0,),
                 Text('사랑하는 아이에게\n소중한 이야기를 남겨주세요!', style: TextStyle(color: Color(0xFF5B5B5B), fontSize: 24.0, fontWeight: FontWeight.w500,),),
                 SizedBox(height: 32.0,),
-                Divider(thickness: 1, color: Colors.grey[600],),
+                Divider(thickness: 1, color: Colors.grey[300],),
                 SizedBox(height: 32.0,),
                 GestureDetector(
                   onTap: () async {
@@ -99,9 +99,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
                     width: double.infinity,
                     decoration: BoxDecoration(
+                      color: Color(0xFFF6E1B8),
                       borderRadius: BorderRadius.circular(5.0),
                       border: Border.all(
-                        color: Colors.black,
+                        color: Color(0xFFE0E0E0),
                         width: 1,
                       )
                     ),
@@ -111,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Image.asset('assets/images/google.png', width: 28.0,),
                         SizedBox(width: 8.0,),
-                        Text('Google 계정으로 시작하기', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400,),),
+                        Text('Google 계정으로 로그인', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600,),),
                       ],
                     ),
                   ),

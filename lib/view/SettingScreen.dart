@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../common/SharedPreferencesService.dart';
 
@@ -10,6 +12,8 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   late String displayName;
   late String email;
   late String photoUrl;
@@ -17,7 +21,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   void initState() {
     super.initState();
-    displayName = SharedPreferencesService().getStringValue('name');
+    displayName = SharedPreferencesService().getStringValue('displayName');
     email = SharedPreferencesService().getStringValue('email');
     photoUrl = SharedPreferencesService().getStringValue('photoUrl');
   }
@@ -44,22 +48,54 @@ class _SettingScreenState extends State<SettingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$displayName'),
-                    Text('$email'),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xFFF1F1F1),
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(photoUrl),
+                      ),
+                    ),
+                    Text('$displayName', style : TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),),
+                    Text('$email', style : TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),),
                   ],
                 ),
+                SizedBox(height: 16.0,),
+                Divider(thickness: 1, height: 1, color: Colors.grey[300]),
+                SizedBox(height: 12.0,),
                 Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('계정 설정', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),),
-                        SizedBox(height: 12.0),
-                        Text('앱 정보', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),),
+                        // Text('계정 설정', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),),
+                        // SizedBox(height: 12.0),
+                        GestureDetector(
+                          onTap: () {
+                            context.push('/appInfo');
+                          },
+                          child: Text('앱 정보', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),)
+                        ),
                       ],
                     )
                 ),
-                Text('로그 아웃', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, decoration: TextDecoration.underline),),
+                GestureDetector(
+                    onTap: () async {
+                      SharedPreferencesService().setStringValue('displayName', "");
+                      SharedPreferencesService().setStringValue('email', "");
+                      SharedPreferencesService().setStringValue('photoUrl', "");
+
+                      await _auth.signOut();
+                      context.go('/login');
+                    },
+                    child: Text('로그 아웃', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, decoration: TextDecoration.underline),)
+                ),
               ],
             ),
           ),

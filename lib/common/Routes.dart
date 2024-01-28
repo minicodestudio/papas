@@ -1,5 +1,6 @@
 
 import 'package:go_router/go_router.dart';
+import 'package:papas/view/AppInfoScreen.dart';
 import 'package:papas/view/HomeScreen.dart';
 import 'package:papas/view/LoginScreen.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
@@ -39,6 +40,12 @@ class GoRouterClass {
           path: '/settings',
           builder: (context, state) {
             return const SettingScreen();
+          },
+        ),
+        GoRoute(
+          path: '/appInfo',
+          builder: (context, state) {
+            return const AppInfoScreen();
           },
         ),
       ],
