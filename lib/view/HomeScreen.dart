@@ -93,49 +93,75 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   itemCount: viewModel.diaryList.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      color: Color(0xFFFFF3DA),
+                    return Container(
                       margin: EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.subject),
-                            title: Text(formatDateString(viewModel.diaryList[index].date), style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),),
-                            subtitle: Text(viewModel.diaryList[index].content, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Color(0xFFFFF3DA),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 0,
+                            blurRadius: 3,
+                            offset: Offset(0, 2), // changes position of shadow
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              PopupMenuButton<String>(
-                                onSelected: (value) {
-                                  _handlePopupMenuSelection(context, value, viewModel.diaryList[index]);
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.edit),
-                                        const SizedBox(width: 8),
-                                        Text('수정'),
-                                      ],
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.delete),
-                                        const SizedBox(width: 8),
-                                        Text('삭제'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
                         ],
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 8.0, top: 8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(top: 4.0, left: 4.0),
+                                child: Icon(Icons.subject)
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(formatDateString(viewModel.diaryList[index].date), style: TextStyle(color: Colors.grey[700], fontSize: 16.0, fontWeight: FontWeight.w600),),
+                                    Text(viewModel.diaryList[index].content, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400),),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        PopupMenuButton<String>(
+                                          onSelected: (value) {
+                                            _handlePopupMenuSelection(context, value, viewModel.diaryList[index]);
+                                          },
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              value: 'edit',
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.edit),
+                                                  const SizedBox(width: 8),
+                                                  Text('수정'),
+                                                ],
+                                              ),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'delete',
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.delete),
+                                                  const SizedBox(width: 8),
+                                                  Text('삭제'),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

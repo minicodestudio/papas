@@ -16,10 +16,10 @@ String formatDateString(String dateString) {
 
   // 'YYYY년MM월DD일' 형태로 문자열 생성
   String formattedString =
-      '${date.year}년${date.month.toString().padLeft(2, '0')}월${date.day.toString().padLeft(2, '0')}일';
+      '${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
 
   // 해당 날짜의 요일을 추가
-  formattedString += ' ${daysOfWeek[date.weekday - 1]}요일';
+  formattedString += ' (${daysOfWeek[date.weekday - 1]}요일)';
 
   return formattedString;
 }
