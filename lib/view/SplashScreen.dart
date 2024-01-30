@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:papas/viewModel/UserViewModel.dart';
@@ -16,12 +17,9 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-  late String email;
-
   @override
   void initState() {
     super.initState();
-    email = SharedPreferencesService().getStringValue('email');
     Timer(Duration(seconds: 3), () {
       checkUserLoginStatus();
     });
@@ -36,8 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xFFF4E5D1),
         body: Center(
-          child: Text('Splash Screen'),
+          child: Image.asset('assets/images/papas_icon.png'),
         ),
       ),
     );
@@ -45,11 +44,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkUserLoginStatus() async {
     if (mounted) {
-      UserViewModel userStatus = await Provider.of<UserViewModel>(
-          context, listen: false);
+      UserViewModel userStatus = await Provider.of<UserViewModel>(context, listen: false);
+      User? user = userStatus.user;
+
+      SharedPreferencesService().setStringValue('displayName', user!.displayName.toString());
+      SharedPreferencesService().setStringValue('email', user!.email.toString());
+      SharedPreferencesService().setStringValue('photoUrl', user!.photoURL.toString());
       if (userStatus.user != null) {
-        print(email);
-        context.go('/home', extra: email);
+        context.go('/home', extra: user!.email.toString());
         //context.go('/login');
       } else {
         context.go('/login');

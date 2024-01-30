@@ -16,7 +16,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> fetchDiaryList(String userEmail) async {
     List<Map<String, dynamic>> diaryData = await _dataSource.getDiaryList(userEmail);
-    _diaryList = diaryData.map((data) => Diary.fromJson(data)).toList();
+    _diaryList = diaryData.map((data) => Diary.fromJson(data, documentId: data['documentId'])).toList();
     //notifyListeners();
   }
 
@@ -26,6 +26,24 @@ class HomeViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> deleteDiary(String documentId) async {
+    try {
+      await _dataSource.deleteDiary(documentId);
+      notifyListeners();
+    } catch (e) {
+      print("Error deleting diary: $e");
+    }
+  }
+
+  Future<void> updateDiary(String documentId, String newContent) async {
+    try {
+      await _dataSource.updateDiary(documentId, newContent);
+      notifyListeners();
+    } catch (e) {
+      print("Error updating diary: $e");
     }
   }
 }

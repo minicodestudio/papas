@@ -13,7 +13,11 @@ class DiaryDataSource {
           .orderBy('date', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => doc.data()).toList();
+      return querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() ?? {};
+        data['documentId'] = doc.id;
+        return data;
+      }).toList();
     } catch (e) {
       print('Error fetching diary list: $e');
       return [];
@@ -29,4 +33,23 @@ class DiaryDataSource {
       throw Exception("다이어리 추가에 실패했습니다.");
     }
   }
+
+  Future<void> deleteDiary(String documentId) async {
+    try {
+      await FirebaseFirestore.instance.collection('diary').doc(documentId).delete();
+    } catch (e) {
+      throw Exception("다이어리 삭제에 실패했습니다.");
+    }
+  }
+
+  Future<void> updateDiary(String documentId, String newContent) async {
+    try {
+      await FirebaseFirestore.instance.collection('diary').doc(documentId).update({
+        'content': newContent,
+      });
+    } catch (e) {
+      throw Exception("다이어리 업데이트에 실패했습니다.");
+    }
+  }
+  
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 import '../common/SharedPreferencesService.dart';
@@ -76,6 +77,14 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         // Text('계정 설정', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),),
                         // SizedBox(height: 12.0),
+                        GestureDetector(onTap: () { Fluttertoast.showToast(msg: "중비중인 기능 입니다.", gravity: ToastGravity.BOTTOM); }, child: Text('배우자 등록', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),)),
+                        SizedBox(height: 12.0),
+                        GestureDetector(onTap: () { Fluttertoast.showToast(msg: "중비중인 기능 입니다.", gravity: ToastGravity.BOTTOM); }, child: Text('공지사항', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),)),
+                        SizedBox(height: 12.0),
+                        GestureDetector(onTap: () { Fluttertoast.showToast(msg: "중비중인 기능 입니다.", gravity: ToastGravity.BOTTOM); }, child: Text('자주하는질문', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),)),
+                        SizedBox(height: 12.0),
+                        GestureDetector(onTap: () { Fluttertoast.showToast(msg: "중비중인 기능 입니다.", gravity: ToastGravity.BOTTOM); }, child: Text('건의사항', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500,),)),
+                        SizedBox(height: 12.0),
                         GestureDetector(
                           onTap: () {
                             context.push('/appInfo');

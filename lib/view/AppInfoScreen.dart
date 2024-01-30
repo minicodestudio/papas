@@ -53,7 +53,7 @@ class _AppInfoScreenState extends State<AppInfoScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('PAPAS 아이콘 넣기'),
+                      Image.asset('assets/images/papas_icon.png', width: 250, height: 250,),
                       Text('${_packageInfo.appName}', style: TextStyle(
                         fontSize: 32.0,
                         fontWeight: FontWeight.w700,
@@ -73,7 +73,7 @@ class _AppInfoScreenState extends State<AppInfoScreen> {
                     // ),
                     Image.asset('assets/images/mcs_ci.png', width: 125.0,),
                     SizedBox(height: 8.0,),
-                    Text('Copyrightⓒ2024 MiniCodeStudio All rights reserved.', style: TextStyle(fontSize: 10.0, ),),
+                    Text('Copyrightⓒ2024 MiniCodeStudio All rights reserved.', style: TextStyle(fontSize: 11.0, ),),
                   ],
                 ),
                 SizedBox(height: 64.0,)

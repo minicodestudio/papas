@@ -37,97 +37,98 @@ class _CalendarPopupState extends State<CalendarPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 24.0),
-              child: Text('기록된 이야기', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500),)
-          ),
-          TableCalendar(
-            locale: 'ko_KR',
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.70,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 24.0),
+                child: Text('기록된 다이어리', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500),)
             ),
-            focusedDay: _focusedDay,
-            firstDay: DateTime.utc(2024, 1, 1),
-            lastDay: DateTime.utc(2099, 12, 31),
-            calendarFormat: _calendarFormat,
-            daysOfWeekHeight: 30, // 요일과 일자 사이 간격
-            calendarStyle: const CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Color(0xFFB9BADA),
-                shape: BoxShape.circle
+            TableCalendar(
+              locale: 'ko_KR',
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
               ),
-                selectedDecoration: BoxDecoration(
-                  color: Color(0xFFD2B9D6),
-                  shape: BoxShape.circle,
-                )
-            ),
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onPageChanged: (focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-              });
-            },
-            // 사용자가 캘린더에 해당일을 클릭했을 때
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
+              focusedDay: _focusedDay,
+              firstDay: DateTime.utc(2024, 1, 1),
+              lastDay: DateTime.utc(2099, 12, 31),
+              calendarFormat: _calendarFormat,
+              daysOfWeekHeight: 30, // 요일과 일자 사이 간격
+              calendarStyle: const CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Color(0xFFB9BADA),
+                  shape: BoxShape.circle
+                ),
+                  selectedDecoration: BoxDecoration(
+                    color: Color(0xFFD2B9D6),
+                    shape: BoxShape.circle,
+                  )
+              ),
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onPageChanged: (focusedDay) {
                 setState(() {
-                  _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                 });
-              }
-            },
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                DateTime _date = DateTime(date.year, date.month, date.day);
-                if (_events[_date] != null) {
-                  return Stack(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.11,
-                        padding: const EdgeInsets.only(bottom: 5),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFFFF3DA),
-                          shape: BoxShape.circle,
+              },
+              // 사용자가 캘린더에 해당일을 클릭했을 때
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                }
+              },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  DateTime _date = DateTime(date.year, date.month, date.day);
+                  if (_events[_date] != null) {
+                    return Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.11,
+                          padding: const EdgeInsets.only(bottom: 5),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFFFF3DA),
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Center(
-                          child: Text(
-                            '${date.day}',
-                            style: TextStyle(
-                              color: Colors.black,
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Center(
+                            child: Text(
+                              '${date.day}',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
+                      ],
+                    );
+                  }
                 }
-              }
+              ),
             ),
-          ),
-          // SizedBox(height: 16.0),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pop(); // 팝업 닫기
-          //   },
-          //   child: Text('OK'),
-          // ),
-        ],
-      ),
+            // SizedBox(height: 16.0),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop(); // 팝업 닫기
+            //   },
+            //   child: Text('OK'),
+            // ),
+          ],
+        ),
     );
   }
 }

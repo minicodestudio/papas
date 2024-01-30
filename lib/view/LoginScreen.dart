@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 16.0,),
                 Text('사랑하는 아이에게\n소중한 이야기를 남겨주세요!', style: TextStyle(color: Color(0xFF5B5B5B), fontSize: 24.0, fontWeight: FontWeight.w500,),),
                 SizedBox(height: 32.0,),
-                Divider(thickness: 1, color: Colors.grey[300],),
+                Divider(thickness: 1, color: Colors.white,),
                 SizedBox(height: 32.0,),
                 GestureDetector(
                   onTap: () async {
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Color(0xFFF6E1B8),
                       borderRadius: BorderRadius.circular(5.0),
                       border: Border.all(
-                        color: Color(0xFFE0E0E0),
+                        color: Color(0xFFF6E1B8),
                         width: 1,
                       )
                     ),

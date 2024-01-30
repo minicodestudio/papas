@@ -29,17 +29,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // HomeViewModel을 Provider로부터 가져오기
-    final HomeViewModel viewModel = Provider.of<HomeViewModel>(context);
+    HomeViewModel viewModel = Provider.of<HomeViewModel>(context);
 
     void _handlePopupMenuSelection(BuildContext context, String value, Diary diary) {
       if (value == 'edit') {
         print('edit');
         // Edit logic
         //_editDiary(context, diary);
+        _showModifyBottomSheet(context, viewModel, diary);
       } else if (value == 'delete') {
         print('delete');
-        // Delete logic
-        //_deleteDiary(context, diary);
+        _deleteDiary(context, viewModel, diary);
       }
     }
 
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Icon(Icons.edit),
                                         const SizedBox(width: 8),
-                                        Text('Edit'),
+                                        Text('수정'),
                                       ],
                                     ),
                                   ),
@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Icon(Icons.delete),
                                         const SizedBox(width: 8),
-                                        Text('Delete'),
+                                        Text('삭제'),
                                       ],
                                     ),
                                   ),
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showBottomSheet(context, viewModel);
+            _showWriteBottomSheet(context, viewModel);
           },
           child: Icon(Icons.add),
         ),
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showBottomSheet(BuildContext context, HomeViewModel viewModel) {
+  void _showWriteBottomSheet(BuildContext context, HomeViewModel viewModel) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // 화면 높이에 맞게 스크롤 가능하게 설정
@@ -220,13 +220,69 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.of(context).pop(); // Bottom sheet 닫기
                 },
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     // 저장 로직 추가
-              //     Navigator.of(context).pop(); // Bottom sheet 닫기
-              //   },
-              //   child: Text('Save Diary'),
-              // ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showModifyBottomSheet(BuildContext context, HomeViewModel viewModel, Diary diary) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // 화면 높이에 맞게 스크롤 가능하게 설정
+      builder: (BuildContext context) {
+        // 포커스를 설정할 텍스트 컨트롤러 생성
+        TextEditingController textEditingController = TextEditingController();
+        textEditingController.text = diary.content;
+
+        DateTime currentDate = DateTime.parse(diary.date);
+        String formattedDate = formatDate(currentDate);
+
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          height: MediaQuery.of(context).size.height * 0.85, // 화면 높이의 85%로 설정
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    formattedDate,
+                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      print('완료...');
+                      String content = textEditingController.text;
+                      if (content.trim() == "") {
+                        Fluttertoast.showToast(msg: "내용을 입력해주세요.", gravity: ToastGravity.BOTTOM);
+                        return;
+                      }
+                      await _updateDiary(context, viewModel, diary.documentId, textEditingController.text);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      '완료',
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  hintText: '다이어리를 작성하세요...',
+                  border: InputBorder.none,
+                ),
+                maxLines: 20,
+                onSubmitted: (String value) {
+                  // 저장 로직 추가
+                  Navigator.of(context).pop(); // Bottom sheet 닫기
+                },
+              ),
             ],
           ),
         );
@@ -239,14 +295,15 @@ class _HomeScreenState extends State<HomeScreen> {
     DateTime currentDate = DateTime.now();
     String formattedDate = DateFormat('yyyyMMdd').format(currentDate);
 
-    Diary diary = Diary(content: content, date: formattedDate, user: widget.email);
+    Diary diary = Diary(content: content, date: formattedDate, user: widget.email, documentId: '');
 
     try {
       await viewModel.addDiary(diary);
       viewModel.fetchDiaryList(widget.email);
-
+      Fluttertoast.showToast(msg: "새로운 다이어리가 등록되었습니다.", gravity: ToastGravity.BOTTOM);
     } catch (e) {
       print("Error saving diary: $e");
+      Fluttertoast.showToast(msg: "다이어리 등록에 실패하였습니다.", gravity: ToastGravity.BOTTOM);
       // 실패할 경우에 대한 로직 추가
     }
 
@@ -254,9 +311,29 @@ class _HomeScreenState extends State<HomeScreen> {
     //viewModel.notifyListeners();
   }
 
+  Future<void> _updateDiary(BuildContext context, HomeViewModel viewModel, String documentId, String content) async {
+    try {
+      await viewModel.updateDiary(documentId, content);
+      viewModel.fetchDiaryList(widget.email);
+      Fluttertoast.showToast(msg: "다이어리가 업데이트 되었습니다.", gravity: ToastGravity.BOTTOM);
+    } catch (e) {
+      print("Error updating diary: $e");
+      Fluttertoast.showToast(msg: "다이어리 업데이트에 실패하였습니다.", gravity: ToastGravity.BOTTOM);
+      // 실패할 경우에 대한 로직 추가
+    }
+  }
+
+  void _deleteDiary(BuildContext context, HomeViewModel viewModel, Diary diary) async {
+    await viewModel.deleteDiary(diary.documentId);
+    viewModel.fetchDiaryList(widget.email);
+    Fluttertoast.showToast(msg: "다이어리가 삭제 되었습니다.", gravity: ToastGravity.BOTTOM);
+    //Navigator.pop(context); // Close the popup menu
+  }
+
   void _showCalendarPopup(BuildContext context, List<Diary> diaryList) {
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (BuildContext context) {
           return CalendarPopup(diaryList: diaryList);
         },
