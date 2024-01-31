@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "875322918052-7kvkq2ub435b7g7qs56csibvb5oud1kk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mcs.papas.papas",
+            "certificate_hash": "beafe2150874ba55e701b36229d209b143628ca0"
+          }
+        },
+        {
           "client_id": "875322918052-jadr0ecjngts5okqtah5kh4f4kdcumlr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

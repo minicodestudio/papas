@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -51,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       return user;
     } catch (error) {
+      Fluttertoast.showToast(msg: "Google 로그인 실패: $error", gravity: ToastGravity.BOTTOM);
       print("Google Sign In Error: $error");
       return null;
     }
@@ -91,7 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       print("Google 로그인 성공: ${user.displayName}");
                       context.go('/home', extra: user.email);
                     } else {
-                      // Google 로그인 실패
                       print("Google 로그인 실패");
                     }
                   },
